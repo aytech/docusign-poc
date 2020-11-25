@@ -4,3 +4,5 @@ lib
 node_modules
 src/main/resources/static/*
 target
+ui/debug.log
+ui/.eslintcache

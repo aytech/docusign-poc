@@ -38,7 +38,7 @@ public class DocumentController {
                 document.setAcl(item.getAccessControlList().getName());
                 document.setAttributes(new ArrayList<>());
                 for (CMResource cmResource : item.getResources().values()) {
-                    if (cmResource.getName().isEmpty()) {
+                    if (cmResource.getName().equals("Preview")) {
                         Resource resource = new Resource();
                         resource.setSize(cmResource.getSize());
                         resource.setMime(cmResource.getMimeType());
