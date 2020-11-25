@@ -1,0 +1,10 @@
+{
+  "short_name": "Demo project for DocuSign",
+  "name": "Demo project for DocuSign",
+  "icons": [
+  ],
+  "start_url": ".",
+  "display": "standalone",
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
+}
