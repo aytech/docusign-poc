@@ -12,23 +12,22 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+
 @RestController
 public class DocumentController {
 
     @GetMapping("/documents")
     public ResponseEntity<List<Document>> getDocuments() {
         List<Document> documents = new ArrayList<>();
-        com.infor.daf.icp.Connection connection = new Connection(
-                System.getenv("BASE_URL"),
-                System.getenv("CONSUMER_KEY"),
-                System.getenv("CLIENT_SECRET"),
-                Connection.AuthenticationMode.OAUTH1
-        );
-        connection.setTenant("CI_TST");
-        connection.setUsername("59e20feb-a9c2-4475-9557-dccc454de4e1");
+        Connection connection = ConnectionStorage.getConnection();
+
+        if (connection == null) {
+            return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
+        }
+
         try {
-            connection.connect();
-            CMItems cmItems = CMItems.search(connection, "/DocuSign[@Name = \"POC\"]", 0, 10);
+            CMItems cmItems = CMItems.search(connection, "/Oleg_Test[@Name = \"POC\"]", 0, 10);
             System.out.println(cmItems);
             for (CMItem item : cmItems) {
                 Document document = new Document();
