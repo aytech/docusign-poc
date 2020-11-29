@@ -27,7 +27,7 @@ public class DocumentController {
         }
 
         try {
-            CMItems cmItems = CMItems.search(connection, "/Oleg_Test[@Name = \"POC\"]", 0, 10);
+            CMItems cmItems = CMItems.search(connection, "/Oleg_Test[@Purpose = \"POC\"]", 0, 10);
             System.out.println(cmItems);
             for (CMItem item : cmItems) {
                 Document document = new Document();
@@ -37,7 +37,7 @@ public class DocumentController {
                 document.setAcl(item.getAccessControlList().getName());
                 document.setAttributes(new ArrayList<>());
                 for (CMResource cmResource : item.getResources().values()) {
-                    if (cmResource.getName().equals("Preview")) {
+                    if (cmResource.getName().equals("SmallPreview")) {
                         Resource resource = new Resource();
                         resource.setSize(cmResource.getSize());
                         resource.setMime(cmResource.getMimeType());
@@ -47,11 +47,13 @@ public class DocumentController {
                     }
                 }
                 for (CMAttribute cmAttribute : item.getAttributes().values()) {
-                    Attribute attribute = new Attribute();
-                    attribute.setName(cmAttribute.getName());
-                    attribute.setType(cmAttribute.getType().toString());
-                    attribute.setValue(cmAttribute.getValue() == null ? null : cmAttribute.getValue().toString());
-                    document.getAttributes().add(attribute);
+                    if (cmAttribute.getName().equals("Name")) {
+                        Attribute attribute = new Attribute();
+                        attribute.setName(cmAttribute.getName());
+                        attribute.setType(cmAttribute.getType().toString());
+                        attribute.setValue(cmAttribute.getValue() == null ? null : cmAttribute.getValue().toString());
+                        document.getAttributes().add(attribute);
+                    }
                 }
                 documents.add(document);
             }

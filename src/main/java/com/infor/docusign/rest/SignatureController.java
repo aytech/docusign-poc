@@ -27,7 +27,9 @@ public class SignatureController {
         }
 
         try {
-            return ResponseEntity.ok(Signature.listTemplates(connection));
+            SignatureResponse<SignatureListTemplatesResponse> response = Signature.listTemplates(connection);
+            System.out.println("Response: " + response);
+            return ResponseEntity.ok(response);
         } catch (SignatureException e) {
             e.printStackTrace();
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();

@@ -1,34 +1,16 @@
 import React, { useState } from "react"
-import { Button, Card, Col, Modal, Row } from "react-bootstrap"
+import { Button, Card, Col, ListGroup, Modal, Row } from "react-bootstrap"
 import { useDocumentQuery } from "../state/useDocumentQuery"
 import "./App.css"
 import { useSignatureQuery } from "../state/useSignatureQuery";
-
-interface Resource {
-  name: string
-  size: number
-  mime: string
-  fileName: string
-  url: string
-}
-
-interface Attribute {
-  name: string
-  type: string
-  value?: string
-}
-
-interface Document {
-  pid: string
-  author: string
-  fileName: string
-  acl: string
-  resource: Resource
-  attributes: Attribute[]
-}
+import { Documents } from "../documents/Documents";
 
 export const App = () => {
-  const {data, error, loading} = useDocumentQuery<Document[]>()
+  const {
+    data: documentsData,
+    error: documentsError,
+    loading: documentsLoading
+  } = useDocumentQuery<Document[]>()
   const {
     fetchCallback,
     data: signData,
@@ -37,9 +19,67 @@ export const App = () => {
   } = useSignatureQuery<{}>("pids here")
   const [ show, setShow ] = useState(false)
 
-  if (loading === true || data === null) {
-    return <h2>Loading...</h2>
-  }
+  const documentsLoadingElement = documentsLoading === true || documentsData === null ? <span>Loading...</span> : null
+  // const documentsList = documentsData === null ? null : (
+  //   documentsData.map((document: Document, index: number) => {
+  //     return (
+  //       <Row key={ index }>
+  //         <Col>
+  //           <Card className="mb-3">
+  //             <Row>
+  //               <Col lg="4" md="4" sm="4" xl="4" xs="4">
+  //                 <Card.Img src={ document.resource.url }/>
+  //               </Col>
+  //
+  //               <Col lg="8" md="8" sm="8" xl="8" xs="8">
+  //                 <Card.Body>
+  //                   <Card.Title>
+  //                     Document attributes:
+  //                   </Card.Title>
+  //                   <ListGroup className="mb-3">
+  //                     {
+  //                       document.attributes.map((attribute: Attribute, index: number) => {
+  //                         return (
+  //                           <ListGroup.Item key={ index }>
+  //                             <strong>{ attribute.name }:</strong> { attribute.value }
+  //                           </ListGroup.Item>
+  //                         )
+  //                       })
+  //                     }
+  //                     <ListGroup.Item>
+  //                       <strong>File name:</strong> { document.fileName }
+  //                     </ListGroup.Item>
+  //                   </ListGroup>
+  //                   <Card.Text>
+  //                     <Card.Link href="#" onClick={ () => {
+  //                       console.log("Signing")
+  //                     } }>Sign</Card.Link>
+  //                     <Card.Link href="#" onClick={ () => {
+  //                       window.open(
+  //                         "https://idm-ade-8.idm.awsdev.infor.com/ca/docusign.html?code=123&state=state",
+  //                         "DocuSign Authorization",
+  //                         "height=640,width=960,toolbar=no,menubar=no,scrollbars=no,location=no,status=no")
+  //                       window.addEventListener("message", (event) => {
+  //                         let code = ''
+  //                         JSON.parse(event.data).data.replace(/\?/, '').split("&").every((param: string) => {
+  //                           const parts = param.split("=")
+  //                           if (parts[0] === 'code') {
+  //                             code = parts[1]
+  //                           }
+  //                         })
+  //                         console.info('Calling API with the code: ', code)
+  //                       }, false)
+  //                     } }>Login</Card.Link>
+  //                   </Card.Text>
+  //                 </Card.Body>
+  //               </Col>
+  //             </Row>
+  //           </Card>
+  //         </Col>
+  //       </Row>
+  //     )
+  //   })
+  // )
 
   return (
     <React.Fragment>
@@ -51,24 +91,16 @@ export const App = () => {
         </p>
       </div>
       <Row>
-        {
-          data.map((document: Document, index: number) => {
-            return (
-              <Col key={ index }>
-                <Card>
-                  <Card.Img variant="top" src={ document.resource.url }/>
-                  <Card.Body>
-                    <Card.Title>{ document.pid }</Card.Title>
-                    <Card.Text>{ document.fileName }</Card.Text>
-                    <Button variant="primary" onClick={ () => {
-                      fetchCallback()
-                    } }>Signature</Button>
-                  </Card.Body>
-                </Card>
-              </Col>
-            )
-          })
-        }
+        <Col>
+          <h2>Documents</h2>
+          { documentsLoadingElement }
+        </Col>
+      </Row>
+      <Documents documents={ documentsData }/>
+      <Row>
+        <Col>
+          <h2>Envelopes</h2>
+        </Col>
       </Row>
       <Modal show={ show } onHide={ () => {
         setShow(false)
