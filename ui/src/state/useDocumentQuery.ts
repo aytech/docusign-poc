@@ -17,17 +17,17 @@ const reducer = <TData>() => (
 ): State<TData> => {
   switch (action.type) {
     case "FETCH":
-      return {...state, loading: true}
+      return { ...state, loading: true }
     case "FETCH_ERROR":
-      return {...state, error: true, loading: false}
+      return { ...state, error: true, loading: false }
     case "FETCH_SUCCESS":
-      return {data: action.data, error: false, loading: false}
+      return { data: action.data, error: false, loading: false }
     default:
       throw new Error("Cannot fetch data")
   }
 }
 
-export const useDocumentQuery = <TData = any>() => {
+export const useDocumentQuery = <TData>() => {
   const fetchReducer = reducer<TData>()
   const [ state, dispatch ] = useReducer(fetchReducer, {
     data: null,
@@ -45,19 +45,19 @@ export const useDocumentQuery = <TData = any>() => {
       return response.json()
     }
     fetchApi()
-      .then(response => {
-        dispatch({type: "FETCH_SUCCESS", data: response})
+      .then((response: TData) => {
+        dispatch({ type: "FETCH_SUCCESS", data: response })
       })
       .catch(_error => {
-        dispatch({type: "FETCH_ERROR"})
+        dispatch({ type: "FETCH_ERROR" })
       })
   }, [])
 
   useEffect(() => {
     fetchCallback().then(_response => {
-      dispatch({type: "FETCH"})
+      dispatch({ type: "FETCH" })
     })
   }, [])
 
-  return {...state, fetchCallback}
+  return { ...state, fetchCallback }
 }

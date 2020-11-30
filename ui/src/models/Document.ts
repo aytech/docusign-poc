@@ -1,5 +1,6 @@
 import Resource from "./Resource";
 import Attribute from "./Attribute";
+import Envelope from "./Envelope";
 
 export default interface Document {
   pid: string
@@ -7,5 +8,6 @@ export default interface Document {
   fileName: string
   acl: string
   resource: Resource
-  attributes: Attribute[]
+  attributes: Attribute[],
+  envelopes: Envelope[]
 }

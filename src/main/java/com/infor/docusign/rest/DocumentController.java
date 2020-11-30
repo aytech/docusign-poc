@@ -1,9 +1,9 @@
 package com.infor.docusign.rest;
 
 import com.infor.daf.icp.*;
-import com.infor.docusign.models.Attribute;
-import com.infor.docusign.models.Document;
-import com.infor.docusign.models.Resource;
+import com.infor.daf.icp.signature.v1.Signature;
+import com.infor.daf.icp.signature.v1.SignatureEnvelope;
+import com.infor.docusign.models.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -54,6 +54,13 @@ public class DocumentController {
                         attribute.setValue(cmAttribute.getValue() == null ? null : cmAttribute.getValue().toString());
                         document.getAttributes().add(attribute);
                     }
+                }
+                for (SignatureEnvelope.EnvelopeStatus envelopeStatus : Signature.getEnvelopeByPid(connection, document.getPid())) {
+                    Envelope envelope = new Envelope();
+                    envelope.setSignature(envelopeStatus.getSignatureId());
+                    envelope.setStatus(envelopeStatus.getStatus());
+                    envelope.setVersion(envelopeStatus.getVersion());
+                    document.setEnvelope(envelope);
                 }
                 documents.add(document);
             }

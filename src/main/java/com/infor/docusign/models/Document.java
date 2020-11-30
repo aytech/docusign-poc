@@ -1,5 +1,6 @@
 package com.infor.docusign.models;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Document {
@@ -9,6 +10,7 @@ public class Document {
     private String acl;
     private Resource resource;
     private List<Attribute> attributes;
+    private List<Envelope> envelopes;
 
     public String getPid() {
         return pid;
@@ -56,5 +58,16 @@ public class Document {
 
     public void setAttributes(List<Attribute> attributes) {
         this.attributes = attributes;
+    }
+
+    public List<Envelope> getEnvelopes() {
+        return envelopes;
+    }
+
+    public void setEnvelope(Envelope envelope) {
+        if (envelopes == null) {
+            envelopes = new ArrayList<>();
+        }
+        this.envelopes.add(envelope);
     }
 }

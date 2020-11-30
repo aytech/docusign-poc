@@ -1,4 +1,5 @@
-import { useCallback, useEffect, useReducer } from "react";
+import { useReducer } from "react";
+import Document from "../models/Document";
 
 interface State<TData> {
   data: TData | null
@@ -17,18 +18,18 @@ const reducer = <TData>() => (
 ): State<TData> => {
   switch (action.type) {
     case "FETCH":
-      return {...state, loading: true}
+      return { ...state, loading: true }
     case "FETCH_ERROR":
-      return {...state, error: true, loading: false}
+      return { ...state, error: true, loading: false }
     case "FETCH_SUCCESS":
-      return {data: action.data, error: false, loading: false}
+      return { data: action.data, error: false, loading: false }
     default:
       throw new Error("Cannot fetch data")
   }
 }
 
-export const useSignatureQuery = <TData = any>(
-  query: string
+export const useSignatureQuery = <TData>(
+  document: Document
 ) => {
   const fetchReducer = reducer<TData>()
   const [ state, dispatch ] = useReducer(fetchReducer, {
@@ -37,14 +38,25 @@ export const useSignatureQuery = <TData = any>(
     loading: false
   })
 
-  const fetchCallback = () => {
+  const fetchRequest = () => {
     const fetchApi = async () => {
       const response = await fetch("/sign", {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
-        body: JSON.stringify(query)
+        body: JSON.stringify({
+          subject: "Sample signature request - POC",
+          message: "DocuSign service for Infor.",
+          pids: [ document.pid ],
+          recipients: [
+            {
+              name: "Oleg Yapparov",
+              email: "Oleg.Yapparov@infor.com"
+            }
+          ],
+          templates: []
+        })
       })
       return response.json()
     }
@@ -52,6 +64,5 @@ export const useSignatureQuery = <TData = any>(
       console.log('Response: ', response)
     })
   }
-
-  return {...state, fetchCallback}
+  return { ...state, fetchRequest }
 }
