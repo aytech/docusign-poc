@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
 
 import static org.springframework.http.HttpStatus.BAD_REQUEST;
 import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
@@ -22,30 +21,25 @@ import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
 public class SignatureController {
 
     @GetMapping("/templates")
-    public ResponseEntity<SignatureResponse<SignatureListTemplatesResponse>> getTemplates() {
+    public ResponseEntity<List<Template>> getTemplates() {
         Connection connection = ConnectionStorage.getConnection();
         if (connection == null) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
         }
 
         try {
-            SignatureResponse<SignatureListTemplatesResponse> response = Signature.listTemplates(connection);
-            System.out.println("Response: " + response);
-            return ResponseEntity.ok(response);
-        } catch (SignatureException e) {
-            e.printStackTrace();
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
-        }
-    }
-
-    @GetMapping("/templates/{id}")
-    public ResponseEntity<SignatureResponse<SignatureTemplate>> getTemplate(@PathVariable UUID id) {
-        Connection connection = ConnectionStorage.getConnection();
-        if (connection == null) {
-            return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
-        }
-        try {
-            return ResponseEntity.ok(Signature.getTemplate(connection, id.toString()));
+            List<Template> templates = new ArrayList<>();
+            SignatureResponse<SignatureListTemplatesResponse> templatesData = Signature.listTemplates(connection);
+            for (SignatureTemplate.TemplateItem templateItem : templatesData.getData().getTemplateList()) {
+                SignatureResponse<SignatureTemplate> templateDetail = Signature.getTemplate(connection, templateItem.getTemplateId());
+                Template template = new Template();
+                template.setName(templateDetail.getData().getName());
+                template.setFilename(templateDetail.getData().getContents().get(0).getFile());
+                template.setExtension(templateDetail.getData().getContents().get(0).getExt());
+                template.setData(templateDetail.getData().getContents().get(0).getData());
+                templates.add(template);
+            }
+            return ResponseEntity.ok(templates);
         } catch (SignatureException e) {
             e.printStackTrace();
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
@@ -65,7 +59,7 @@ public class SignatureController {
         SignatureEnvelope signatureEnvelope = new SignatureEnvelope();
         List<String> documents = new ArrayList<>(request.getPids());
         List<SignatureEnvelope.Recipient> signers = new ArrayList<>();
-//        List<SignatureEnvelope.Content> contents = new ArrayList<>();
+        List<SignatureEnvelope.Content> contents = new ArrayList<>();
 
         for (Recipient recipient : request.getRecipients()) {
             SignatureEnvelope.Recipient signer = new SignatureEnvelope.Recipient();
@@ -75,15 +69,15 @@ public class SignatureController {
         }
         signatureEnvelope.setRecipients(signers);
 
-//        for (Template template : request.getTemplates()) {
-//            SignatureEnvelope.Content content = new SignatureEnvelope.Content();
-//            content.setId(String.valueOf(Math.round(Math.random() * 10))); // This can't be template ID, but random number
-//            content.setFile(template.getFilename());
-//            content.setExt(template.getExtension());
-//            content.setData(template.getData());
-//            contents.add(content);
-//        }
-//        signatureEnvelope.setContents(contents);
+        for (Template template : request.getTemplates()) {
+            SignatureEnvelope.Content content = new SignatureEnvelope.Content();
+            content.setId(String.valueOf(Math.round(Math.random() * 10))); // This can't be template ID, but random number
+            content.setFile(template.getFilename());
+            content.setExt(template.getExtension());
+            content.setData(template.getData());
+            contents.add(content);
+        }
+        signatureEnvelope.setContents(contents);
 
         signatureEnvelope.setSubject(request.getSubject());
         signatureEnvelope.setMessage(request.getMessage());

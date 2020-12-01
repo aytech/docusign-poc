@@ -64,6 +64,10 @@ public class Document {
         return envelopes;
     }
 
+    public void setEnvelopes(List<Envelope> envelopes) {
+        this.envelopes = envelopes;
+    }
+
     public void setEnvelope(Envelope envelope) {
         if (envelopes == null) {
             envelopes = new ArrayList<>();

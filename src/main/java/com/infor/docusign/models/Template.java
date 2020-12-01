@@ -1,9 +1,18 @@
 package com.infor.docusign.models;
 
 public class Template {
+    private String name;
     private String filename;
     private String extension;
     private String data;
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public String getFilename() {
         return filename;

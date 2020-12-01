@@ -55,6 +55,7 @@ public class DocumentController {
                         document.getAttributes().add(attribute);
                     }
                 }
+                document.setEnvelopes(new ArrayList<>());
                 for (SignatureEnvelope.EnvelopeStatus envelopeStatus : Signature.getEnvelopeByPid(connection, document.getPid())) {
                     Envelope envelope = new Envelope();
                     envelope.setSignature(envelopeStatus.getSignatureId());
