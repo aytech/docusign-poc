@@ -1,0 +1,25 @@
+Payload:
+
+{
+    "subject": "Sample signature request - POC",
+    "message": "DocuSign service for Infor.",
+    "pids": [
+        "Oleg_Test-30-2-LATEST",
+        "Oleg_Test-31-3-LATEST"
+    ],
+    "recipients": [
+        {
+            "name": "Oleg Yapparov",
+            "email": "Oleg.Yapparov@infor.com"
+        }
+    ],
+    "templates": [
+        {
+            "filename": "Test document",
+            "extension": "",
+            "subject": "Sample signature request - POC",
+            "message": "DocuSign service for Infor.",
+            "data": "<tu bude base64>"
+		}
+	]
+}

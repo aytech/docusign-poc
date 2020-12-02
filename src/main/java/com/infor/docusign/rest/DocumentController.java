@@ -28,7 +28,6 @@ public class DocumentController {
 
         try {
             CMItems cmItems = CMItems.search(connection, "/Oleg_Test[@Purpose = \"POC\"]", 0, 10);
-            System.out.println(cmItems);
             for (CMItem item : cmItems) {
                 Document document = new Document();
                 document.setPid(item.getPid());
@@ -56,13 +55,19 @@ public class DocumentController {
                     }
                 }
                 document.setEnvelopes(new ArrayList<>());
-                for (SignatureEnvelope.EnvelopeStatus envelopeStatus : Signature.getEnvelopeByPid(connection, document.getPid())) {
+                SignatureEnvelope.EnvelopeStatus[] envelopeStatuses = Signature.getEnvelopeByPid(connection, document.getPid());
+                for (SignatureEnvelope.EnvelopeStatus status : envelopeStatuses) {
+                    SignatureEnvelope.EnvelopeDetail envelopeDetail = Signature.getEnvelopeById(connection, status.getSignatureId());
                     Envelope envelope = new Envelope();
-                    envelope.setSignature(envelopeStatus.getSignatureId());
-                    envelope.setStatus(envelopeStatus.getStatus());
-                    envelope.setVersion(envelopeStatus.getVersion());
+                    envelope.setSignature(envelopeDetail.getSignatureId());
+                    envelope.setStatus(envelopeDetail.getStatus());
+                    envelope.setSubject(envelopeDetail.getSubject());
+                    envelope.setMessage(envelopeDetail.getMessage());
+                    envelope.setRecipients(envelopeDetail.getRecipients());
+                    envelope.setDocuments(envelopeDetail.getDocuments());
                     document.setEnvelope(envelope);
                 }
+                
                 documents.add(document);
             }
             return ResponseEntity.ok(documents);

@@ -1,9 +1,16 @@
 package com.infor.docusign.models;
 
+import com.infor.daf.icp.signature.v1.SignatureEnvelope;
+
+import java.util.List;
+
 public class Envelope {
     private String signature;
     private String status;
-    private Integer version;
+    private String subject;
+    private String message;
+    private List<SignatureEnvelope.Recipient> recipients;
+    private List<SignatureEnvelope.Document> documents;
 
     public String getSignature() {
         return signature;
@@ -21,11 +28,35 @@ public class Envelope {
         this.status = status;
     }
 
-    public Integer getVersion() {
-        return version;
+    public String getSubject() {
+        return subject;
     }
 
-    public void setVersion(Integer version) {
-        this.version = version;
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public List<SignatureEnvelope.Recipient> getRecipients() {
+        return recipients;
+    }
+
+    public void setRecipients(List<SignatureEnvelope.Recipient> recipients) {
+        this.recipients = recipients;
+    }
+
+    public List<SignatureEnvelope.Document> getDocuments() {
+        return documents;
+    }
+
+    public void setDocuments(List<SignatureEnvelope.Document> documents) {
+        this.documents = documents;
     }
 }

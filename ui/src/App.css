@@ -1,0 +1,157 @@
+.App {
+  text-align: center;
+  background-color: #AAB9CF;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.App > div {
+  display: flex;
+}
+
+section {
+  width: 400px
+}
+
+ul {
+  list-style: none;
+}
+
+button {
+  display: inline-block;
+  color: white;
+  background-color: #5a2038;
+  border: 0;
+  border-radius: 5px;
+  padding: 10px 20px;
+  font-weight: bold;
+  font-style: italic;
+  cursor: pointer
+}
+
+button.cancelButton {
+  color: #5a2038;
+  background-color: #929292;
+}
+
+input {
+  padding: 5px;
+}
+
+select {
+  margin: 25px auto;
+  display: block;
+}
+
+.SearchResults {
+  margin: 1em;
+  background-color: white;
+  height: 500px;
+  border: 2px solid black;
+}
+
+.SearchResults .noResults {
+  padding-top: 100px;
+}
+
+.SearchResults {
+  margin: 1em;
+  background-color: white;
+  height: 500px;
+  border: 2px solid black;
+}
+
+.SearchResults ul {
+  margin: 0;
+  padding:0;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.SearchResults li {
+  border-bottom: 1px solid black;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+}
+
+.SearchResults li.selected {
+  background-color: #628ac1;
+  color: white;
+}
+
+.SearchResults li:not(:first-child) {
+  border-top: 0;
+}
+
+.SearchResults li div:first-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 120px;
+  height: 80px;
+  margin: 5px 10px;
+}
+
+.SearchResults li div img {
+  max-width: 80px;
+  max-height: 80px;
+}
+
+.attribute {
+  display: flex;
+  justify-content: space-between;
+  margin: 1em 1em 1em 0;
+}
+
+.attribute span:first-child {
+  margin-right: 1em;
+  font-style: italic;
+  font-size: small;
+  display: inline-flex;
+  align-items: center;
+}
+
+.attribute.non-flex {
+  display: block;
+}
+
+.secondSection {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.EnvelopesTab {
+  margin: 1em;
+  background-color: white;
+  height: 400px;
+  width: 400px;
+  border: 2px solid black;
+}
+
+.EnvelopesTab ul {
+  margin: 0;
+  padding:0;
+  overflow-y: auto;
+  height: 100%;
+}
+
+.EnvelopesTab li {
+  border-bottom: 1px solid black;
+}
+
+.EnvelopesTab li:not(:first-child) {
+  border-top: 0;
+}
+
+.EnvelopesTab li div {
+  margin-left: 10px;
+}
+
+.no-margin {
+  margin: 0;
+}
