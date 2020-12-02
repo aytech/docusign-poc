@@ -3,10 +3,7 @@ package com.infor.docusign.rest;
 import com.infor.daf.icp.Connection;
 import com.infor.daf.icp.internal.signature.SignatureException;
 import com.infor.daf.icp.signature.v1.*;
-import com.infor.docusign.models.Recipient;
-import com.infor.docusign.models.SignDocumentsRequest;
-import com.infor.docusign.models.SignDocumentsResponse;
-import com.infor.docusign.models.Template;
+import com.infor.docusign.models.*;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,32 +11,41 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.springframework.http.HttpStatus.BAD_REQUEST;
-import static org.springframework.http.HttpStatus.INTERNAL_SERVER_ERROR;
+import static org.springframework.http.HttpStatus.*;
 
 @RestController
 public class SignatureController {
 
     @GetMapping("/templates")
-    public ResponseEntity<List<Template>> getTemplates() {
+    public ResponseEntity<TemplatesResponse> getTemplates() {
         Connection connection = ConnectionStorage.getConnection();
         if (connection == null) {
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
         }
 
+        TemplatesResponse response = new TemplatesResponse();
+        response.setTemplates(new ArrayList<>());
+        response.setLoginUrl("");
+
         try {
-            List<Template> templates = new ArrayList<>();
-            SignatureResponse<SignatureListTemplatesResponse> templatesData = Signature.listTemplates(connection);
-            for (SignatureTemplate.TemplateItem templateItem : templatesData.getData().getTemplateList()) {
-                SignatureResponse<SignatureTemplate> templateDetail = Signature.getTemplate(connection, templateItem.getTemplateId());
-                Template template = new Template();
-                template.setName(templateDetail.getData().getName());
-                template.setFilename(templateDetail.getData().getContents().get(0).getFile());
-                template.setExtension(templateDetail.getData().getContents().get(0).getExt());
-                template.setData(templateDetail.getData().getContents().get(0).getData());
-                templates.add(template);
+            SignatureResponse<SignatureListTemplatesResponse> templatesResponse = Signature.listTemplates(connection);
+            if (templatesResponse.getStatus().isAuthorized()) {
+                for (SignatureTemplate.TemplateItem templateItem : templatesResponse.getData().getTemplateList()) {
+                    SignatureResponse<SignatureTemplate> templateDetail = Signature.getTemplate(connection, templateItem.getTemplateId());
+                    Template template = new Template();
+                    template.setName(templateDetail.getData().getName());
+                    template.setFilename(templateDetail.getData().getContents().get(0).getFile());
+                    template.setExtension(templateDetail.getData().getContents().get(0).getExt());
+                    template.setData(templateDetail.getData().getContents().get(0).getData());
+                    response.setTemplate(template);
+                }
+                response.setAuthorized(true);
+                return ResponseEntity.ok(response);
+            } else {
+                response.setAuthorized(false);
+                response.setLoginUrl(templatesResponse.getStatus().getRedirect());
+                return new ResponseEntity<>(response, UNAUTHORIZED);
             }
-            return ResponseEntity.ok(templates);
         } catch (SignatureException e) {
             e.printStackTrace();
             return ResponseEntity.status(INTERNAL_SERVER_ERROR).build();
@@ -84,13 +90,19 @@ public class SignatureController {
         signatureEnvelope.setItems(documents);
 
         try {
-            response.setEnvelope(Signature.sendEnvelope(connection, false, signatureEnvelope));
-            response.setStatus(true);
-            return ResponseEntity.ok(response);
+            SignatureResponse<SignatureEnvelope.EnvelopeStatus> sendStatus = Signature.sendEnvelope(connection, false, signatureEnvelope);
+            if (sendStatus.getStatus().isAuthorized()) {
+                response.setAuthorized(true);
+                response.setLoginUrl("");
+                response.setEnvelope(sendStatus.getData());
+                return ResponseEntity.ok(response);
+            } else {
+                response.setAuthorized(false);
+                response.setLoginUrl(sendStatus.getStatus().getRedirect());
+                return new ResponseEntity<>(response, UNAUTHORIZED);
+            }
         } catch (SignatureException | IOException e) {
             e.printStackTrace();
-            response.setStatus(false);
-            response.setMessage(e.getMessage());
             return new ResponseEntity<>(response, BAD_REQUEST);
         }
     }

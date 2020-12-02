@@ -4,31 +4,31 @@ import com.infor.daf.icp.signature.v1.SignatureEnvelope;
 import com.infor.daf.icp.signature.v1.SignatureResponse;
 
 public class SignDocumentsResponse {
-    private SignatureResponse<SignatureEnvelope.EnvelopeStatus> envelope;
-    private String message;
-    private Boolean status;
+    private SignatureEnvelope.EnvelopeStatus envelope;
+    private String loginUrl;
+    private Boolean authorized;
 
-    public SignatureResponse<SignatureEnvelope.EnvelopeStatus> getEnvelope() {
+    public SignatureEnvelope.EnvelopeStatus getEnvelope() {
         return envelope;
     }
 
-    public void setEnvelope(SignatureResponse<SignatureEnvelope.EnvelopeStatus> envelope) {
+    public void setEnvelope(SignatureEnvelope.EnvelopeStatus envelope) {
         this.envelope = envelope;
     }
 
-    public String getMessage() {
-        return message;
+    public String getLoginUrl() {
+        return loginUrl;
     }
 
-    public void setMessage(String message) {
-        this.message = message;
+    public void setLoginUrl(String loginUrl) {
+        this.loginUrl = loginUrl;
     }
 
-    public Boolean getStatus() {
-        return status;
+    public Boolean isAuthorized() {
+        return authorized;
     }
 
-    public void setStatus(Boolean status) {
-        this.status = status;
+    public void setAuthorized(Boolean authorized) {
+        this.authorized = authorized;
     }
 }
