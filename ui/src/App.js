@@ -311,9 +311,9 @@ class SignatureFormTab extends React.Component {
 
 function EnvelopesTab(props) {
   const envelopes = props.item?.envelopes.map(
-    envelope => <li key={envelope.signature_id}>
+    envelope => <li key={envelope.signature}>
       <div>
-          <p className="attribute"><span>Id:</span><span>{envelope.signature_id}</span></p>
+          <p className="attribute"><span>Id:</span><span>{envelope.signature}</span></p>
           <p className="attribute"><span>Subject:</span><span>{envelope.subject}</span></p>
           <p className="attribute"><span>Status:</span><span>{envelope.status}</span></p>
           <div className="attribute non-flex"><span>Recipients:</span>{envelope.recipients.map(recipient => <p key={recipient.name} className="no-margin">{recipient.name} - {recipient.status}</p>)}</div>
