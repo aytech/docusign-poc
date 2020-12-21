@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<item xmlns="http://infor.com/daf">
+    <entityName>MDS_GenericDocument</entityName>
+    <acl>
+        <id>1</id>
+        <name>Public</name>
+    </acl>
+    <attrs>
+        <attr>
+            <name>Name</name>
+            <type>1</type>
+            <qual>Name</qual>
+            <value>Seed document</value>
+        </attr>
+    </attrs>
+</item>

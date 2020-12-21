@@ -36,7 +36,7 @@ public class DocumentController {
                 document.setAcl(item.getAccessControlList().getName());
                 document.setAttributes(new ArrayList<>());
                 for (CMResource cmResource : item.getResources().values()) {
-                    if (cmResource.getName().equals("SmallPreview")) {
+                    if (cmResource.getName().equals("Thumbnail")) {
                         Resource resource = new Resource();
                         resource.setSize(cmResource.getSize());
                         resource.setMime(cmResource.getMimeType());
