@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <item xmlns="http://infor.com/daf">
-    <entityName>MDS_GenericDocument</entityName>
+    <entityName>Load_Test</entityName>
     <acl>
-        <id>1</id>
         <name>Public</name>
     </acl>
     <attrs>
@@ -10,7 +9,20 @@
             <name>Name</name>
             <type>1</type>
             <qual>Name</qual>
-            <value>Seed document</value>
+            <value>Seeded document</value>
         </attr>
     </attrs>
+    <colls>
+        <name>Invoice</name>
+        <coll>
+            <entityName>Invoice</entityName>
+            <attrs>
+                <attr>
+                    <name>Value</name>
+                    <type>1</type>
+                    <value>1234567890</value>
+                </attr>
+            </attrs>
+        </coll>
+    </colls>
 </item>

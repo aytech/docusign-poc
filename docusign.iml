@@ -96,7 +96,7 @@
     <orderEntry type="module-library">
       <library>
         <CLASSES>
-          <root url="jar://$MODULE_DIR$/lib/icp-2021-01-20201127-27-NIGHTLY.jar!/" />
+          <root url="jar://$MODULE_DIR$/lib/icp-2021-01-20201202-32-NIGHTLY.jar!/" />
         </CLASSES>
         <JAVADOC />
         <SOURCES />

@@ -38,7 +38,7 @@ public class AuthenticationController {
                 System.getenv("BASE_URL"),
                 System.getenv("CONSUMER_KEY"),
                 System.getenv("CLIENT_SECRET"),
-                Connection.AuthenticationMode.OAUTH1
+                Connection.AuthenticationMode.TOKEN
         );
         connection.setTenant(System.getenv("TENANT_ID"));
         connection.setUsername(System.getenv("CLIENT_USER"));
