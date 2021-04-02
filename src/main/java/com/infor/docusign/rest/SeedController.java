@@ -51,6 +51,7 @@ public class SeedController {
                     addDocument(connection, request);
                 } catch (Exception e) {
                     e.printStackTrace();
+                    Thread.currentThread().interrupt();
                     System.out.println("Error saving document: " + e.getMessage());
                 }
             }
